@@ -141,6 +141,8 @@ function converse ($human, &$context, $history) {
         $context['status'] = NULL;
 
     }
+    
+    
 
 
 
