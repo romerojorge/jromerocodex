@@ -131,14 +131,15 @@ function converse ($human, &$context, $history) {
         if ($human  == "no"){
             return NULL;
         }
-        $context['status'] = NULL;
+        $context['status'] = "finish";
         return "Name: " .$context['name']. "\nHeight:".$context['height']."\nWeight: ".$context['weight']."\nAge: ".$context['age']."\nGender: ".$context['sex']." ";
 
 
     }
 
-    if ($human == "exit"){
-        $context['status'] = NULL;
+    if ($context['status'] == "finish"){
+        //$history['history'] = $context['name'];
+        return " here is your chat history".$history. " ";
 
     }
     
