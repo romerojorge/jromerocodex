@@ -141,7 +141,7 @@ function converse ($human, &$context, $history) {
                 }
                 $context['status'] = "newconversation";
                 return "Name: " .$context['name']. "\nHeight:".$context['height']."\nWeight: ".$context['weight']."\nAge: ".$context['age']."\nGender: ".$context['sex']." ";
-
+                break;
 
             }
 
@@ -153,9 +153,8 @@ function converse ($human, &$context, $history) {
             break;
 
         case ("*eat");
-            $context['status']="caloriecount";
 
-            if ($context['status'] == "caloriecount") {
+            if (is_null($context['status']))  {
                 $context['status'] = "bcalories?";
                 return "please enter the number of calories you consumed for breakfast";
 
