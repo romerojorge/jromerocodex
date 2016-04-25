@@ -29,7 +29,7 @@ $bot_says = converse ($human_says, $chat_context, $chat_history);
 CacheManager::set($chat_id . "_context", $chat_context, 600); // cache for 600 seconds
 
 if (is_null($bot_says) || trim($bot_says)==false) {
-    $bot_says = "Sorry, I cannot understand you!";
+    $bot_says = "blah blah, please say something I actually understand!";
 }
 $chat_history = array_push ($chat_history, array("ts"=>time(), "text"=>$bot_says));
 CacheManager::set($chat_id . "_history", $chat_history, 600); // cache for 600 seconds
@@ -52,7 +52,7 @@ function converse ($human, &$context, $history) {
 
     if (is_null($context['status'])) {
         $context['status'] = "wait_for_name";
-        return "Lets begin by setting up your profile. Please enter your First and Last Name";
+        return " WELCOME, Lets begin by setting up your 1-Byte profile. Please enter your First and Last Name";
     }
 
     // The user responded to the bot's question about name
@@ -83,7 +83,7 @@ function converse ($human, &$context, $history) {
 
     }
     if ($context['status'] == "age?") {
-        $context['weight'] = $human;
+        $context['age'] = $human;
         if ($human == 0) {
             return NULL;
 
@@ -109,14 +109,62 @@ function converse ($human, &$context, $history) {
 
     }
 
-    if ($context['status'] == "maleBMR"){
-        $BMR = 66 + (6.3 * floatval($context['weight'])) + (12.7 * floatval($context['height'])) - (4.8* floatval($context['age']));
-        $context['status'] = "profile";
-        return " Your BMR is " .$BMR. " your profile is ready \nWould you like to view your entire profile?";
+    if ($context['status'] == "maleBMR") {
 
+        // calculations before showing entire profile
+        $BMR = 655 + (4.35 * floatval($context['weight'])) + (4.7 * floatval($context['height'])) - (4.7* floatval($context['age']));
+        $BMI = floatval((($context['weight'] * 703)/ ($context ['height'] * $context['height'])));
+
+        $context['bmi']=$BMI;
+        $context ['bmr']=$BMR;
+        if ($BMI <= 18.4) {
+            $context['bmiStatus'] = "Underweight";
+        }
+        if ($BMI >= 18.5 && $BMI <= 24.9) {
+            $context['bmiStatus'] = "Healthy";
+        }
+        if ($BMI >= 25.0 && $BMI <= 29.9) {
+            $context['bmiStatus'] = "overweight";
+        }
+        if ($BMI >= 30.0) {
+            $context['bmiStatus'] = "Underweight";
+        }
+
+        $context['status'] = "profile";
 
     }
-    if ($context['status'] == "maleBMR"){
+
+
+
+        if ($context['status'] == "femaleBMR"){
+            // calculations before showing entire profile
+            $BMR = 655 + (4.35 * floatval($context['weight'])) + (4.7 * floatval($context['height'])) - (4.7* floatval($context['age']));
+            $BMI = floatval((($context['weight'] * 703)/ ($context ['height'] * $context['height'])));
+
+            $context['bmi']=$BMI;
+            $context ['bmr']=$BMR;
+            if ($BMI <= 18.4) {
+                $context['bmiStatus'] = "Underweight";
+            }
+            if ($BMI >= 18.5 && $BMI <= 24.9) {
+                $context['bmiStatus'] = "Healthy";
+            }
+            if ($BMI >= 25.0 && $BMI <= 29.9) {
+                $context['bmiStatus'] = "overweight";
+            }
+            if ($BMI >= 30.0) {
+                $context['bmiStatus'] = "Underweight";
+            }
+
+
+            $context['status'] = "profile";
+
+
+
+
+
+        }
+    if ($context['status'] == "femaleBMR"){
         // calculations before showing entire profile
         $BMR = 655 + (4.35 * floatval($context['weight'])) + (4.7 * floatval($context['height'])) - (4.7* floatval($context['age']));
         $BMI = floatval((($context['weight'] * 703)/ ($context ['height'] * $context['height'])));
@@ -137,7 +185,7 @@ function converse ($human, &$context, $history) {
         }
 
 
-        $context['status'] = "profile";
+
 
 
 
@@ -146,25 +194,27 @@ function converse ($human, &$context, $history) {
 
     if ($context['status'] == "profile"){
         $context['status'] = "NA";
-        return "Name: " .$context['name']. "\nHeight:".$context['height']."\nWeight: ".$context['weight']."\nAge: ".$context['age']."\nGender: ".$context['sex']."\n BMI: "
-        .$context['bmi']. ":" .$context['bmiStatus']. "\n BMR : ". $context['bmr']. ": This is the amount of calories you need to consume in order to maintain your current weight";
+        return "Name: " .$context['name']. "\nHeight:".$context['height']."\nWeight: ".$context['weight']."\nAge: ".$context['age']."\nGender: ".$context['sex']."\n BMI: " .$context['bmi']. ":" .$context['bmiStatus']. "\n BMR : ". $context['bmr']. ": This is the amount of calories you need to consume in order to maintain your current weight";
 
 
 
     }
-
+// conversation using free words
     if ($context['status'] == "NA") {
 
-        if (strpos($human, 'calories') !== false) {
+        if ((strpos($human, 'just ate') !== false) or (strpos($human, 'calories') ) !== false) {
             $context['status'] = "calorie_status";
             return "how many calories did you consume";
 
 }
-        if (strpos($human, 'fuck') !== false) {
+        if (strpos($human, 'bitch') !== false) {
             $context['status'] = "calorie_s";
 
 
         }
+
+
+//
 
 
     }
@@ -174,8 +224,16 @@ function converse ($human, &$context, $history) {
 
          $context ['calories'] = $human;
          $context['calorie_counter'] += $context['calories'];
+
+         if ($context ['calorie_counter']>= $context['bmr']){
+             $context ['calorie_status'] = " Wow Slow down there buddy";
+         }else{
+             $context ['calorie_status'] = " ";
+         }
+
+
          
-         return " you have ".$context['calories']. " ";
+         return " you have ".$context['calorie_counter']. " ".$context['calorie_status'];
      }
     if ($context['status'] == "calorie_s"){
         $context ['status'] = "NA";
