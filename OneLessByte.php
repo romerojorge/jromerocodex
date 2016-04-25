@@ -49,16 +49,10 @@ CacheManager::set($chat_id . "_history", $chat_history, 600); // cache for 600 s
 function converse ($human, &$context, $history) {
 
 
-    switch ($human){
 
-        case ("hello");
-            return "Welcome to Onelessbyte\nHere are a few key words to get you started\n*new : If you are a new user\n*eat : To input your calorie intake";
-            break;
-        case ("*new");
-
-            if (is_null($context['status'])) {
+    if (is_null($context['status'])) {
                 $context['status'] = "wait_for_name";
-                return "Lets begin by setting up your profile. Please enter _firstname lastname_";
+                return "Lets begin by setting up your profile. Please enter your First and Last Name";
             }
 
             // The user responded to the bot's question about name
@@ -141,7 +135,7 @@ function converse ($human, &$context, $history) {
                 }
                 $context['status'] = "newconversation";
                 return "Name: " .$context['name']. "\nHeight:".$context['height']."\nWeight: ".$context['weight']."\nAge: ".$context['age']."\nGender: ".$context['sex']." ";
-                break;
+
 
             }
 
@@ -149,34 +143,6 @@ function converse ($human, &$context, $history) {
 
 
 
-
-            break;
-
-        case ("*eat");
-
-            if (is_null($context['status']))  {
-                $context['status'] = "bcalories?";
-                return "please enter the number of calories you consumed for breakfast";
-
-            }
-            if ($context['status'] == "bcalories?") {
-                $context['bcalories'] = $human;
-                $context['status'] = "newconversation" ;
-                return "Cool, I recorded your calories for breakfast";
-            }
-            if ($context['status'] == "newconversation"){
-
-                exit;
-
-            }
-
-
-
-
-            break;
-
-
-    }
 
 
 
