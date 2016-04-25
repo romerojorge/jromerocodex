@@ -130,7 +130,7 @@ function converse ($human, &$context, $history) {
             $context['bmiStatus'] = "Underweight";
         }
 
-        $context['status'] = "profile";
+        $context['status'] = "Activity";
 
     }
 
@@ -201,17 +201,32 @@ function converse ($human, &$context, $history) {
     }
 // conversation using free words
     if ($context['status'] == "NA") {
-
+// calorie counter after eating
         if ((strpos($human, 'just ate') !== false) or (strpos($human, 'calories') ) !== false) {
             $context['status'] = "calorie_status";
             return "how many calories did you consume";
-
+// random test word
 }
         if (strpos($human, 'bitch') !== false) {
             $context['status'] = "calorie_s";
+// show your profile again
+
+        }
+        if (strpos($human, 'profile') !== false) {
+            $context['status'] = "profile";
 
 
         }
+
+        // Template for burning calories - follow line 261
+
+
+        if ((strpos($human, 'burn') !== false) and (strpos($human, '500')) !== false and (strpos($human, 'calories') !== false)) {
+            $context['status'] = "500calwork";
+
+
+        }
+
 
 
 //
@@ -235,9 +250,24 @@ function converse ($human, &$context, $history) {
          
          return " you have ".$context['calorie_counter']. " ".$context['calorie_status'];
      }
+
     if ($context['status'] == "calorie_s"){
         $context ['status'] = "NA";
 return "fuck off";
+
+
+    }
+
+    if ($context['status'] == "500calwork"){
+
+        $context ['status'] = "NA";
+        return "Tennis (520 calories)\n
+Running (600 calories)\n
+Bicycling (600 calories)\n
+Football (600 calories)\n
+Basketball (600 calories)\n
+Soccer (600 calories)\n
+all 1 HOUR ";
 
 
     }
