@@ -155,12 +155,12 @@ function converse ($human, &$context, $history) {
 
     if ($context['status'] == "NA") {
 
-        if (strpos($human, 'calories' || 'I just ate') !== false) {
+        if (strpos($human, 'calories') !== false) {
             $context['status'] = "calorie_status";
             return "how many calories did you consume";
 
 }
-        if (strpos($human, 'calo' || 'I jt ate') !== false) {
+        if (strpos($human, 'fuck') !== false) {
             $context['status'] = "calorie_s";
 
 
