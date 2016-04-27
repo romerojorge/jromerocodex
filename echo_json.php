@@ -285,6 +285,15 @@ function converse ($human, &$context, $history)
             $context['status'] = "update_weight";
             return " Okay, what is your new weight?";
         }
+        if ((strpos($human, 'end') !== false) or (strpos($human, 'finish') !== false)) {
+            $context['status'] = "END";
+        }
+        if ((strpos($human, 'new user') !== false)) {
+            $context['status'] = NULL;
+        }
+        if ((strpos($human, 'questions?') !== false)) {
+            $context['status'] = "endOfDemo";
+        }
 
 
 
@@ -526,7 +535,7 @@ function converse ($human, &$context, $history)
 
     if ($context['status'] == "calorie_update") {
         $context ['status'] = "NA";
-        return " Calorie Status for today" . $context['calorie_counter'] . "\n To lose weight you need: " . (round($context['bmr'], 0) - 500) . "cal daily" . "\n To keep your weight you need: " . round($context['bmr'], 0) . "cal daily" . "\n To gain weight you need: " . (round($context['bmr'], 0) + 500) . "cal daily";
+        return " Calorie Status for today " . $context['calorie_counter'] . "\n To lose weight you need: " . (round($context['bmr'], 0) - 500) . "cal daily" . "\n To keep your weight you need: " . round($context['bmr'], 0) . "cal daily" . "\n To gain weight you need: " . (round($context['bmr'], 0) + 500) . "cal daily";
     }
 
     if ($context['status'] == "lostweight"){
@@ -537,6 +546,24 @@ function converse ($human, &$context, $history)
     if ($context['status'] == "suure"){
         $context ['status'] = "NA";
         return "http://i.imgur.com/uv3whVy.jpg\nhttps://media.riffsy.com/images/9ddea6899165d002b3a0e77185698599/raw";
+    }
+
+    if ($context['status'] == "END"){
+        $context ['status'] = "NA";
+        if ($context ['calorie_counter'] >= $context['bmr']) {
+            $context ['calorie_status'] = "Not your best day";
+        } else {
+            $context ['calorie_status'] = " Pretty healthy day";
+        }
+        $context['calorie_counter']= 0;
+
+
+
+        return " ".$context['calorie_status']." \n I will see you tomorrow. ";
+    }
+    if ($context['status'] == "endOfDemo" ){
+        $context ['status'] = "NA";
+        return "https://img.buzzfeed.com/buzzfeed-static/static/2014-02/enhanced/webdr03/25/12/anigif_enhanced-19588-1393350366-12.gif";
     }
 
 
