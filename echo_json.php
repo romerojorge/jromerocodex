@@ -52,7 +52,7 @@ function converse ($human, &$context, $history)
 
     if (is_null($context['status'])) {
         $context['status'] = "wait_for_name";
-        return " WELCOME, Lets begin by setting up your 1-Byte profile. Please enter your First and Last Name";
+        return " WELCOME, Lets begin by setting up your ONELESSBYTE profile.\nPlease enter your First and Last Name";
     }
 
     // The user responded to the bot's question about name
@@ -203,7 +203,7 @@ function converse ($human, &$context, $history)
         . "\nGender: " . $context['sex']
         . "\n BMI: " . $context['bmiStatus']
         . "\n BMR: "
-        . "\n To lose weight you need: " . (round($context['bmr'], 0) - 500) . "cal daily" . "\n To keep your weight you need: " . round($context['bmr'], 0) . "cal daily" . "\n To gain weight you need: " . (round($context['bmr'], 0) + 500) . "cal daily";
+        . "\n To lose weight you need: " . (round($context['bmr'], 0) - 500) . " cal daily" . "\n To keep your weight you need: " . round($context['bmr'], 0) . "  cal daily" . "\n To gain weight you need: " . (round($context['bmr'], 0) + 500) . " cal daily";
     }
 
 
@@ -233,11 +233,7 @@ function converse ($human, &$context, $history)
 
         }
 
-        if (strpos($human, 'update') !== false) {
-            $context['status'] = "update_profile";
-            return "What would you like to update on your profile, age or weight?" ;
 
-        }
 
         if ((strpos($human, 'burn') !== false) and (strpos($human, '500') !== false)) {
             $context['status'] = "500calwork";
@@ -275,6 +271,24 @@ function converse ($human, &$context, $history)
             $context['status'] = "favexercise";
         }
 
+        if ((strpos($human, 'lost') !== false)) {
+            $context['status'] = "lostweight";
+        }
+        if ((strpos($human, 'sure') !== false)) {
+            $context['status'] = "suure";
+        }
+        if ((strpos($human, 'change') !== false)) {
+            $context['status'] = "UDProfile";
+            return "What would you like to update on your profile?";
+        }
+        if ((strpos($human, 'seriously') !== false)) {
+            $context['status'] = "update_weight";
+            return " Okay, what is your new weight?";
+        }
+
+
+
+
 
 //### before this bracket
 
@@ -298,6 +312,80 @@ function converse ($human, &$context, $history)
 
         return " " . $context['calorie_status'] . "\n Your daily calorie balance is  " . $context['calorie_counter'] . " ";
     }
+    if ($context['status'] == "UDProfile"){
+        if ($human == "weight"){
+            $context ['status'] = "update_weight";
+            return " enter new weight in lb.";
+        }
+        if ($human == "age"){
+            $context ['status'] = "update_age";
+            return "Happy birthday, enter your new age";
+        }elseif ($human == null) {
+            return NULL;
+        }
+
+
+
+    }
+
+    if ($context['status'] == "update_weight"){
+        $context['status'] = 'NA';
+        $context['weight'] = $human;
+
+       // *********************************
+        $BMR = 655 + (4.35 * floatval($context['weight'])) + (4.7 * floatval($context['height'])) - (4.7 * floatval($context['age']));
+        $BMI = floatval((($context['weight'] * 703) / ($context ['height'] * $context['height'])));
+
+        $context['bmi'] = $BMI;
+        $context ['bmr'] = $BMR;
+        if ($BMI <= 18.4) {
+            $context['bmiStatus'] = "You are underweight, get some meat on those bones.";
+        }
+        if ($BMI >= 18.5 && $BMI <= 24.9) {
+            $context['bmiStatus'] = "According to your BMI you are HEALTHY!!!";
+        }
+        if ($BMI >= 25.0 && $BMI <= 29.9) {
+            $context['bmiStatus'] = "You are overweight, time to start eating healthier and exercising.";
+        }
+        if ($BMI >= 30.0) {
+            $context['bmiStatus'] = "Your BMI says you are obese, a plan of action would be best for you.";
+        }
+        //**********************************
+
+        return "Profile has been updated";
+
+
+
+    }
+    if ($context['status'] == "update_age"){
+        $context['status'] = 'NA';
+        $context['age'] = $human;
+
+        // *********************************
+        $BMR = 655 + (4.35 * floatval($context['weight'])) + (4.7 * floatval($context['height'])) - (4.7 * floatval($context['age']));
+        $BMI = floatval((($context['weight'] * 703) / ($context ['height'] * $context['height'])));
+
+        $context['bmi'] = $BMI;
+        $context ['bmr'] = $BMR;
+        if ($BMI <= 18.4) {
+            $context['bmiStatus'] = "You are underweight, get some meat on those bones.";
+        }
+        if ($BMI >= 18.5 && $BMI <= 24.9) {
+            $context['bmiStatus'] = "According to your BMI you are HEALTHY!!!";
+        }
+        if ($BMI >= 25.0 && $BMI <= 29.9) {
+            $context['bmiStatus'] = "You are overweight, time to start eating healthier and exercising.";
+        }
+        if ($BMI >= 30.0) {
+            $context['bmiStatus'] = "Your BMI says you are obese, a plan of action would be best for you.";
+        }
+        //**********************************
+
+        return "Profile has been updated";
+
+
+
+    }
 
 
     if ($context['status'] == "calorie_status_workout") {
@@ -308,9 +396,9 @@ function converse ($human, &$context, $history)
         $context['calorie_counter'] -= $context['calories_burned'];
 
         if ($context ['calorie_counter'] >= $context['bmr']) {
-            $context ['calorie_status'] = " Wow Slow down there buddy";
+            $context ['calorie_status'] = " You need to work out more buddy";
         } else {
-            $context ['calorie_status'] = " ";
+            $context ['calorie_status'] = " keep it up!";
         }
 
 
@@ -441,39 +529,19 @@ function converse ($human, &$context, $history)
         return " Calorie Status for today" . $context['calorie_counter'] . "\n To lose weight you need: " . (round($context['bmr'], 0) - 500) . "cal daily" . "\n To keep your weight you need: " . round($context['bmr'], 0) . "cal daily" . "\n To gain weight you need: " . (round($context['bmr'], 0) + 500) . "cal daily";
     }
 
-
-    if ($context['status'] == "update_profile"){
-        if ($human == "weight"){
-            $context ['status'] = "update_weight";
-            return " enter new weight in lb.";
-        }
-        if ($human == "age"){
-            $context ['status'] = "update_age";
-            return "Happy birthday, enter your new age";
-        }elseif ($human == null) {
-            return NULL;
-        }
-
-
-
+    if ($context['status'] == "lostweight"){
+        $context ['status'] = "NA";
+        return "I have a picture that says otherwise. Do you want to see it?";
     }
 
-    if ($context['status'] == "update_weight"){
-        $context['status'] = 'NA';
-        $context['weight'] = $human;
-        return "Profile has been updated";
-        
-
-
+    if ($context['status'] == "suure"){
+        $context ['status'] = "NA";
+        return "http://i.imgur.com/uv3whVy.jpg\nhttps://media.riffsy.com/images/9ddea6899165d002b3a0e77185698599/raw";
     }
-    if ($context['status'] == "update_age"){
-        $context['status'] = 'NA';
-        $context['age'] = $human;
-        return "Profile has been updated";
 
 
 
-    }
+
     
 }
 
