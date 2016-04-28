@@ -88,7 +88,7 @@ function converse ($human, &$context, $history)
     }
     if ($context['status'] == "maleBMR") {
         // calculations before showing entire profile
-        $BMR = 655 + (4.35 * floatval($context['weight'])) + (4.7 * floatval($context['height'])) - (4.7 * floatval($context['age']));
+        $BMR = 66 + (6.23 * floatval($context['weight'])) + (12.7 * floatval($context['height'])) - (6.8 * floatval($context['age']));
         $BMI = floatval((($context['weight'] * 703) / ($context ['height'] * $context['height'])));
         $context['bmi'] = $BMI;
         $context ['bmr'] = $BMR;
@@ -277,7 +277,7 @@ function converse ($human, &$context, $history)
         $context['status'] = 'NA';
         $context['weight'] = $human;
         // *********************************
-        $BMR = 655 + (4.35 * floatval($context['weight'])) + (4.7 * floatval($context['height'])) - (4.7 * floatval($context['age']));
+        $BMR = 66 + (6.23 * floatval($context['weight'])) + (12.7 * floatval($context['height'])) - (6.8 * floatval($context['age']));
         $BMI = floatval((($context['weight'] * 703) / ($context ['height'] * $context['height'])));
         $context['bmi'] = $BMI;
         $context ['bmr'] = $BMR;
@@ -300,7 +300,7 @@ function converse ($human, &$context, $history)
         $context['status'] = 'NA';
         $context['age'] = $human;
         // *********************************
-        $BMR = 655 + (4.35 * floatval($context['weight'])) + (4.7 * floatval($context['height'])) - (4.7 * floatval($context['age']));
+        $BMR = 66 + (6.23 * floatval($context['weight'])) + (12.7 * floatval($context['height'])) - (6.8 * floatval($context['age']));
         $BMI = floatval((($context['weight'] * 703) / ($context ['height'] * $context['height'])));
         $context['bmi'] = $BMI;
         $context ['bmr'] = $BMR;
